@@ -1,0 +1,53 @@
+modules = ["nodejs-20"]
+[agent]
+expertMode = true
+
+[[ports]]
+localPort = 3000
+externalPort = 80
+exposeLocalhost = true
+
+[nix]
+packages = ["electron", "gh", "glib", "gtk3", "gdk-pixbuf", "xorg.libX11", "xorg.libxcb", "nss", "nspr", "atk", "cups", "dbus", "libdrm", "mesa", "cairo", "pango", "expat", "alsa-lib", "libgbm", "libxkbcommon", "xorg.libXcomposite", "xorg.libXdamage", "xorg.libXext", "xorg.libXfixes", "xorg.libXrandr", "xorg.libXrender", "xorg.libXtst", "xorg.libXScrnSaver", "xorg.libxshmfence", "libnotify", "at-spi2-atk", "at-spi2-core", "cmake"]
+channel = "stable-25_05"
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Workflow"
+mode = "sequential"
+author = 49189680
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm install && npm run build && npm start"
+
+[[workflows.workflow]]
+name = "Run Button"
+mode = "sequential"
+author = 49189680
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Workflow"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "run"
+
+[[workflows.workflow]]
+name = "run"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm start"
+
+[workflows.workflow.metadata]
+outputType = "vnc"
